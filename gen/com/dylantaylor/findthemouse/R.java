@@ -22,8 +22,13 @@ public final class R {
         public static final int card4=0x7f050004;
         public static final int card5=0x7f050005;
         public static final int cardContainer=0x7f050000;
-        public static final int leftCount=0x7f050007;
-        public static final int leftLabel=0x7f050006;
+        public static final int leftCount=0x7f050008;
+        public static final int leftLabel=0x7f050007;
+        public static final int scoreAccumulator=0x7f05000a;
+        public static final int scoreLabel=0x7f050009;
+        public static final int statisticsContainer=0x7f050006;
+        public static final int streakLabel=0x7f05000b;
+        public static final int winningStreak=0x7f05000c;
     }
     public static final class layout {
         public static final int main=0x7f030000;
