@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:padding="9dip">
+    <LinearLayout
+	    android:id="@+id/cardContainer"
+	    android:orientation="horizontal"
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent">
+	    <Button 
+		    android:id="@+id/card1"
+		    android:layout_width="96dip"
+		    android:layout_height="138dip"
+		    android:layout_marginRight="6dip"
+		   	android:background="@drawable/card"/>
+	   	<Button 
+		    android:id="@+id/card2"
+		    android:layout_width="96dip"
+		    android:layout_height="138dip"
+		    android:layout_marginRight="6dip"
+		   	android:background="@drawable/card"/>
+	   	<Button 
+		    android:id="@+id/card3"
+		    android:layout_width="96dip"
+		    android:layout_height="138dip"
+		    android:layout_marginRight="6dip"
+		   	android:background="@drawable/card"/>
+	   	<Button 
+		    android:id="@+id/card4"
+		    android:layout_width="96dip"
+		    android:layout_height="138dip"
+		    android:layout_marginRight="6dip"
+		   	android:background="@drawable/card"/>
+	   	<Button 
+		    android:id="@+id/card5"
+		    android:layout_width="96dip"
+		    android:layout_height="138dip"
+		   	android:background="@drawable/card"/>
+   	</LinearLayout>
+	<TextView android:id="@+id/leftLabel"
+	   	android:text="Guesses Left:"
+	   	android:layout_width="wrap_content"	   	
+	   	android:layout_height="wrap_content"
+	   	android:textStyle="normal"/>
+	<TextView android:id="@+id/leftCount"
+	   	android:text="..."
+	   	android:layout_width="wrap_content"
+	   	android:layout_height="wrap_content"
+	   	android:textStyle="bold"/>
+</LinearLayout>

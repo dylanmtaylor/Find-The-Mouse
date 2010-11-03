@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="app_name">Find The Mouse</string>
+<string name="app_title">Find The Mouse by Dylan Taylor</string>
+<string name="win_title">Congratulations!</string>
+<string name="win_message">You found the mouse!</string>
+<string name="ok">Ok</string>
+<string name="lose_title">You Lose!</string>
+</resources>
