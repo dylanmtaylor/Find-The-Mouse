@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
     
     private void updateCounter() {
     	
-    	guessCount.setText(clicksLeft, BufferType.NORMAL); //update the guesses left counter
+    	guessCount.setText(Integer.toString(clicksLeft), BufferType.NORMAL); //update the guesses left counter
     }
     
     private void startGame() { //Called when the game is started
