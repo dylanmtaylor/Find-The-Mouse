@@ -18,6 +18,7 @@ import java.util.Random;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -31,12 +32,17 @@ public class MainActivity extends Activity {
 	//Global Variables
     private final int cardIDs[] = new int[]{R.id.card1,R.id.card2,R.id.card3,R.id.card4,R.id.card5};
     private final int gameClicks = 3; //number of clicks allowed per game
-    private final String MSG_TAG = "FindTheMouse";
+    private final String MSG_TAG = "FindTheMouse"; //used for debugging logs
+    private final int DELAY_TIME = 1000; //delay time in milliseconds between games
     private boolean gameOver = false;
     private boolean gameWon = false;
-    private TextView guessCount;
+    private TextView guessCount; //guesses left
+    private TextView currScore; //current score
+    private TextView currStreak; //current winning streak
     private int mouseCard = -1; //The number of the card the mouse is hidden under
     private int clicksLeft = gameClicks; //clicks left until game is lost
+    private int currentStreak = 0; //counter of number of games won in a row
+    private int currentScore = 0; //current number of points accumulated
     private Button card[] = new Button[5];
     
     /** Called when the activity is first created. */
@@ -46,6 +52,8 @@ public class MainActivity extends Activity {
         this.setTitle(getString(R.string.app_title));
         setContentView(R.layout.main);
         guessCount = (TextView) this.findViewById(R.id.leftCount);
+        currScore = (TextView) this.findViewById(R.id.scoreAccumulator);
+        currStreak = (TextView) this.findViewById(R.id.winningStreak);
         if (guessCount == null) {
     		Log.i(MSG_TAG, "guessCount is NULL!");
     	}
@@ -68,11 +76,15 @@ public class MainActivity extends Activity {
 					v.setBackgroundDrawable(getBaseContext().getResources().getDrawable(R.drawable.mouse));	
 					gameOver = true;
 					gameWon = true;
+					currentStreak++;
+					currentScore += (clicksLeft + 1);
 					showMessage();
+					resetGame(false);
 				} else if (!gameOver) {
-					updateCounter();
+					updateStatistics();
 					v.setVisibility(View.INVISIBLE); //v.setVisibility(View.GONE); would center the remaining cards...
 					if (clicksLeft == 0) {
+						gameOver = true;
 						showMessage();
 					}
 				}
@@ -86,17 +98,27 @@ public class MainActivity extends Activity {
         startGame();
     }
     
-    private void updateCounter() {
-    	
+    private void updateStatistics() {
     	guessCount.setText(Integer.toString(clicksLeft), BufferType.NORMAL); //update the guesses left counter
+    	currScore.setText(Integer.toString(currentScore), BufferType.NORMAL); //update the current score
+    	currStreak.setText(Integer.toString(currentStreak), BufferType.NORMAL); //update the current winning streak
+    }
+    
+    private void delayRefresh() { //waits short amount of time before starting next game
+    	Handler handler = new Handler();
+        handler.postDelayed(new Runnable() { 
+             public void run() { 
+            	 MainActivity.this.doReset();
+             } 
+        }, DELAY_TIME);
     }
     
     private void startGame() { //Called when the game is started
     	Log.i(MSG_TAG,"Starting Game...");
     	gameOver = false; //the game is no longer over
     	gameWon = false; //the game also wasn't won yet since it just started
-    	clicksLeft = gameClicks; //reset the number of clicks left
-    	updateCounter(); //update the guesses left counter
+    	clicksLeft = gameClicks; //reset the number of clicks left    	
+    	updateStatistics(); //update the guesses left counter
     	mouseCard = new Random().nextInt(5); //generate a new mouse card
     	Log.i(MSG_TAG,"Shh... the mouse is located under card: " + (mouseCard+1)); //+1 is because the cards actually go from 0-4 not 1-5
     	for (Button b : card) { //make all the buttons visible and change all backgrounds to the card image
@@ -106,20 +128,33 @@ public class MainActivity extends Activity {
     }
     
     @Override
-    public boolean onSearchRequested() { //makes the search button reset the game
-    	resetGame();
-    	return false;
+    public boolean onSearchRequested() { 
+    	return false; //since the search button resets the game, do nothing
     }
     
-    public void resetGame() { //reset the game, in the easiest way possible
+    public void resetGame(boolean resetSession) { //handles reset requests
+    	if (resetSession) {
+    		currentScore = 0; //reset the current score to zero
+        	currentStreak = 0; //reset the current winning streak to zero  	
+    		doReset();
+    	} else {
+    		delayRefresh();
+    	}
+    }
+    
+    public void doReset() { //actually resets the game, in the easiest way possible
     	this.onDestroy();
     	this.onCreate(null);
     }
     
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent msg) {
-        if (keyCode == KeyEvent.KEYCODE_MENU) { //menu button pressed
-            resetGame();
+        if ((keyCode == KeyEvent.KEYCODE_MENU) || (keyCode == KeyEvent.KEYCODE_SEARCH)) { //menu or search button pressed
+        	if (gameOver) { //this check prevents accidental resetting of scores
+        		resetGame(true);
+        	}
+        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
+        	finish();
         } else { //otherwise, do the key's original action
             super.onKeyDown(keyCode, msg);
         }
